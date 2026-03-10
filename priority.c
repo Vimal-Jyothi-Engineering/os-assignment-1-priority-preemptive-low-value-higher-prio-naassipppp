@@ -1,39 +1,58 @@
 #include <stdio.h>
 
-struct process
-{
-    char pid[10];
-    int at, bt, pr;
-    int ct, wt, tat;
-    int done;
-};
-
 int main()
 {
-    int n, i, time = 0, completed = 0, idx;
-    float avg_wt = 0, avg_tat = 0;
+    int n,i,t=0,completed=0;
+    int at[10],bt[10],pr[10],rt[10];
+    int ct[10],tat[10],wt[10];
+    int min,pos;
 
-    struct process p[20];
+    scanf("%d",&n);
 
-    scanf("%d", &n);
-
-    for(i = 0; i < n; i++)
+    for(i=0;i<n;i++)
     {
-        scanf("%s %d %d %d", p[i].pid, &p[i].at, &p[i].bt, &p[i].pr);
-        p[i].done = 0;
+        scanf("%d%d%d",&at[i],&bt[i],&pr[i]);
+        rt[i]=bt[i];
     }
 
-   ....
-     ...
-     ...
-     ...
-     ..
-     ..
-     ...
-     ..
-     .
-    printf("Average Waiting Time: %.2f\n", avg_wt / n);
-    printf("Average Turnaround Time: %.2f\n", avg_tat / n);
+    while(completed<n)
+    {
+        min=999;
+        pos=-1;
+
+        for(i=0;i<n;i++)
+        {
+            if(at[i]<=t && rt[i]>0 && pr[i]<min)
+            {
+                min=pr[i];
+                pos=i;
+            }
+        }
+
+        if(pos!=-1)
+        {
+            rt[pos]--;
+            t++;
+
+            if(rt[pos]==0)
+            {
+                completed++;
+                ct[pos]=t;
+                tat[pos]=ct[pos]-at[pos];
+                wt[pos]=tat[pos]-bt[pos];
+            }
+        }
+        else
+            t++;
+    }
+
+    printf("P\tAT\tBT\tPR\tCT\tTAT\tWT\n");
+
+    for(i=0;i<n;i++)
+    {
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+        i+1,at[i],bt[i],pr[i],ct[i],tat[i],wt[i]);
+    }
 
     return 0;
 }
